@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+
+  mssql:
+      image: mcr.microsoft.com/azure-sql-edge
+      container_name: mssql
+      environment:
+          SA_PASSWORD: "admin123!"
+          ACCEPT_EULA: "Y"    
+      ports:
+          - 5434:1433
+      networks:
+          - mt-network
+      volumes: 
+          - mssql-volume:/var/opt/mssql
+
+  rabbit:
+      image: "rabbitmq:management-alpine"
+      container_name: rabbit
+      environment:
+          RABBITMQ_DEFAULT_USER: "guest"
+          RABBITMQ_DEFAULT_PASS: "guest"
+      networks:
+          - mt-network
+      ports:
+          - 5672:5672
+          - 15672:15672
+
+networks:
+  sv-network:
+    name: mt-network
+
+volumes:
+  mssql-volume:
+    driver: local
